@@ -14,7 +14,6 @@
       --ink: #2f2f2a;
       --muted: #6b6a65;
       --line: #e6dccf;
-      --soft: rgba(47,47,42,.06);
       --accent: #c17c5a;
       --accent2: #6f7f5f;
       --radius: 18px;
@@ -139,6 +138,7 @@
     .view{ display:none; }
     .view.active{ display:block; }
 
+    /* Loading */
     .loaderWrap{
       display:flex;
       flex-direction:column;
@@ -161,6 +161,7 @@
       line-height:1.5;
     }
 
+    /* Recipe */
     .recipeTitle{
       margin: 2px 0 0;
       font-size: 26px;
@@ -217,51 +218,66 @@
     }
     .error.show{ display:block; }
 
+    /* Bundle / CTA (separate & compact) */
     .ctaWrap{
       margin-top: 18px;
       width: min(720px, 100%);
-      border-top: 1px solid var(--line);
-      padding-top: 18px;
+      padding-top: 6px;
       text-align:center;
+    }
+
+    .ctaDivider{
+      width: 100%;
+      height: 1px;
+      background: var(--line);
+      margin: 14px 0 18px;
     }
 
     .ctaTitle{
       margin: 0;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 760;
-      letter-spacing: .1px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: rgba(47,47,42,.78);
     }
 
     .ctaText{
-      margin: 8px 0 0;
+      margin: 10px auto 0;
       color: var(--muted);
       font-size: 13.5px;
-      line-height: 1.55;
+      line-height: 1.6;
       max-width: 62ch;
     }
 
-    .seriesCard{
+    .seriesMini{
       margin: 14px auto 0;
-      width: min(480px, 100%);
-      border: 1px solid var(--line);
-      border-radius: 18px;
+      width: min(240px, 100%);
+      border-radius: 16px;
       overflow: hidden;
+      border: 1px solid var(--line);
       background: #fff;
-      box-shadow: 0 10px 28px rgba(47,47,42,.08);
+      box-shadow: 0 10px 28px rgba(47,47,42,.06);
     }
 
-    .seriesCard img{
+    .seriesMini img{
       width: 100%;
       height: auto;
       display: block;
+    }
+
+    .ctaSell{
+      margin: 12px auto 0;
+      color: rgba(107,106,101,.92);
+      font-size: 13px;
+      line-height: 1.6;
+      max-width: 62ch;
     }
 
     .ctaActions{
       margin-top: 14px;
       display:flex;
       justify-content:center;
-      gap:10px;
-      flex-wrap:wrap;
     }
 
     .ctaButton{
@@ -270,29 +286,23 @@
       gap:8px;
       padding: 10px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(111,127,95,.45);
-      background: rgba(111,127,95,.10);
+      border: 1px solid rgba(193,124,90,.55);
+      background: rgba(193,124,90,.10);
       font-weight: 750;
       text-decoration: none;
       color: var(--ink);
     }
-    .ctaButton:hover{
-      border-color: rgba(111,127,95,.75);
-      background: rgba(111,127,95,.14);
-    }
 
-    .ctaFineprint{
-      margin: 10px 0 0;
-      color: rgba(107,106,101,.85);
-      font-size: 12px;
-      line-height: 1.5;
+    .ctaButton:hover{
+      border-color: rgba(193,124,90,.75);
+      background: rgba(193,124,90,.14);
     }
 
     @media (max-width:480px){
       h1{ font-size: 30px; }
       .panel{ padding: 22px 16px; }
       .recipeTitle{ font-size: 22px; }
-      .seriesCard{ border-radius: 16px; }
+      .seriesMini{ border-radius: 14px; width: min(220px, 100%); }
     }
   </style>
 </head>
@@ -301,6 +311,7 @@
   <main class="stage">
     <section class="panel">
 
+      <!-- LANDING -->
       <div class="view active" id="viewLanding">
         <div class="center">
           <h1>Cooking Compass</h1>
@@ -320,6 +331,7 @@
         </div>
       </div>
 
+      <!-- LOADING -->
       <div class="view" id="viewLoading">
         <div class="center">
           <div class="loaderWrap" aria-live="polite">
@@ -341,6 +353,7 @@
         </div>
       </div>
 
+      <!-- RECIPE -->
       <div class="view" id="viewRecipe">
         <div class="center">
           <h2 class="recipeTitle" id="rTitle">…</h2>
@@ -358,17 +371,19 @@
 
           <div class="actions" style="margin-top:16px;">
             <button class="primary" id="btnNext">Next recipe</button>
-            <button id="btnLearn">Learn to think like this</button>
           </div>
 
+          <!-- Separator + bundle section -->
           <div class="ctaWrap">
-            <p class="ctaTitle">Creative Cooking — Complete Series</p>
+            <div class="ctaDivider"></div>
+
+            <p class="ctaTitle">Creative Cooking: The complete bundle</p>
             <p class="ctaText">
-              Cooking Compass gives you a direction for tonight.<br/>
-              The guides teach you how to build meals like this yourself — from whatever you already have.
+              Cooking Compass gives you a direction for tonight.
+              The bundle explains the thinking behind it — so you can build meals confidently from whatever you already have.
             </p>
 
-            <div class="seriesCard">
+            <div class="seriesMini">
               <img
                 src="assets/creative-cooking-series.png"
                 alt="Creative Cooking Complete Series covers"
@@ -376,13 +391,18 @@
               />
             </div>
 
+            <p class="ctaSell">
+              Four short guides: basics, techniques, fridge improvisation, and weeknight structure.
+              Practical, calm, and designed to reduce decision stress in the kitchen.
+            </p>
+
             <div class="ctaActions">
               <a class="ctaButton" href="https://www.etsy.com/shop/CreativeCookingBooks" target="_blank" rel="noopener">
-                Explore the guides →
+                View the bundle on Etsy →
               </a>
             </div>
 
-            <p class="ctaFineprint">© <span id="year3"></span> Cooking Compass</p>
+            <div class="footer">© <span id="year3"></span> Cooking Compass</div>
           </div>
         </div>
       </div>
@@ -456,7 +476,7 @@
       const data = await callAI(ingredients);
       applyRecipe(data);
       showView("viewRecipe");
-      window.scrollTo({ top: 0, behavior: "auto" }); // ✅ fixed
+      window.scrollTo({ top: 0, behavior: "auto" });
     } catch(e){
       showView("viewLanding");
       setError("Something went wrong. Try again, or shorten the ingredient list.");
@@ -467,10 +487,6 @@
   $("btnGo").addEventListener("click", runOnce);
   $("btnBack").addEventListener("click", () => showView("viewLanding"));
   $("btnNext").addEventListener("click", runOnce);
-
-  $("btnLearn").addEventListener("click", () => {
-    window.open("https://www.etsy.com/shop/CreativeCookingBooks", "_blank", "noopener");
-  });
 
   document.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") runOnce();
