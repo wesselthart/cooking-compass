@@ -14,6 +14,7 @@
       --ink: #2f2f2a;
       --muted: #6b6a65;
       --line: #e6dccf;
+      --soft: rgba(47,47,42,.06);
       --accent: #c17c5a;
       --accent2: #6f7f5f;
       --radius: 18px;
@@ -169,6 +170,7 @@
       letter-spacing:.2px;
       text-align:center;
     }
+
     .recipeIntro{
       margin: 6px auto 0;
       color: var(--muted);
@@ -177,11 +179,13 @@
       max-width: 64ch;
       text-align:center;
     }
+
     .recipeBody{
       margin-top: 18px;
       width: min(620px, 100%);
       text-align:left;
     }
+
     .sectionLabel{
       margin: 14px 0 8px;
       font-size: 11.5px;
@@ -189,8 +193,17 @@
       letter-spacing: .12em;
       text-transform: uppercase;
     }
-    ul{ margin: 0 0 0 18px; padding:0; }
-    li{ margin: 8px 0; line-height: 1.6; font-size: 14.5px; }
+
+    ul{
+      margin: 0 0 0 18px;
+      padding:0;
+    }
+    li{
+      margin: 8px 0;
+      line-height: 1.6;
+      font-size: 14.5px;
+    }
+
     .note{
       margin-top: 12px;
       color: var(--muted);
@@ -213,62 +226,83 @@
     }
     .error.show{ display:block; }
 
-    /* Etsy */
-    .etsyWrap{
+    /* CTA (replaces Etsy embed) */
+    .ctaWrap{
       margin-top: 18px;
       width: min(720px, 100%);
       border-top: 1px solid var(--line);
-      padding-top: 16px;
+      padding-top: 18px;
       text-align:center;
     }
-    .etsyTitle{
+
+    .ctaTitle{
       margin: 0;
       font-size: 14px;
-      font-weight: 750;
+      font-weight: 760;
+      letter-spacing: .1px;
     }
-    .etsyHint{
-      margin: 6px 0 0;
+
+    .ctaText{
+      margin: 8px 0 0;
       color: var(--muted);
-      font-size: 13px;
-      line-height:1.45;
+      font-size: 13.5px;
+      line-height: 1.55;
+      max-width: 62ch;
     }
-    .etsyFrame{
-      margin-top: 12px;
-      width: min(720px, 100%);
-      height: 520px;
+
+    .seriesCard{
+      margin: 14px auto 0;
+      width: min(480px, 100%);
       border: 1px solid var(--line);
-      border-radius: 16px;
-      overflow:hidden;
+      border-radius: 18px;
+      overflow: hidden;
       background: #fff;
+      box-shadow: 0 10px 28px rgba(47,47,42,.08);
     }
-    .etsyFallback{
-      display:none;
-      margin-top: 12px;
-      padding: 14px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(111,127,95,.08);
-      color: var(--ink);
+
+    .seriesCard img{
+      width: 100%;
+      height: auto;
+      display: block;
     }
-    .etsyFallback.show{ display:block; }
-    .etsyLink{
-      display:inline-block;
-      margin-top: 10px;
+
+    .ctaActions{
+      margin-top: 14px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .ctaButton{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
       padding: 10px 14px;
       border-radius: 999px;
       border: 1px solid rgba(111,127,95,.45);
-      background: rgba(111,127,95,.12);
+      background: rgba(111,127,95,.10);
       font-weight: 750;
+      text-decoration: none;
+      color: var(--ink);
     }
-    .etsyLink:hover{
-      border-color: rgba(111,127,95,.7);
-      background: rgba(111,127,95,.16);
+    .ctaButton:hover{
+      border-color: rgba(111,127,95,.75);
+      background: rgba(111,127,95,.14);
+    }
+
+    .ctaFineprint{
+      margin: 10px 0 0;
+      color: rgba(107,106,101,.85);
+      font-size: 12px;
+      line-height: 1.5;
     }
 
     @media (max-width:480px){
       h1{ font-size: 30px; }
       .panel{ padding: 22px 16px; }
       .recipeTitle{ font-size: 22px; }
+      .seriesCard{ border-radius: 16px; }
     }
   </style>
 </head>
@@ -277,7 +311,7 @@
   <main class="stage">
     <section class="panel">
 
-      <!-- LANDING -->
+      <!-- VIEW 1: LANDING -->
       <div class="view active" id="viewLanding">
         <div class="center">
           <h1>Cooking Compass</h1>
@@ -297,7 +331,7 @@
         </div>
       </div>
 
-      <!-- LOADING -->
+      <!-- VIEW 2: LOADING -->
       <div class="view" id="viewLoading">
         <div class="center">
           <div class="loaderWrap" aria-live="polite">
@@ -319,7 +353,7 @@
         </div>
       </div>
 
-      <!-- RECIPE -->
+      <!-- VIEW 3: RECIPE -->
       <div class="view" id="viewRecipe">
         <div class="center">
           <h2 class="recipeTitle" id="rTitle">…</h2>
@@ -340,30 +374,29 @@
             <button id="btnLearn">Learn to think like this</button>
           </div>
 
-          <div class="etsyWrap">
-            <p class="etsyTitle">Creative Cooking Guides</p>
-            <p class="etsyHint">If you want to learn how to come up with ideas like this on your own.</p>
+          <!-- CTA SECTION (image + single link) -->
+          <div class="ctaWrap">
+            <p class="ctaTitle">Creative Cooking — Complete Series</p>
+            <p class="ctaText">
+              Cooking Compass gives you a direction for tonight.<br/>
+              The guides teach you how to build meals like this yourself — from whatever you already have.
+            </p>
 
-            <div class="etsyFrame" id="etsyFrameWrap">
-              <iframe
-                id="etsyFrame"
-                title="Creative Cooking Books on Etsy"
-                src="https://www.etsy.com/shop/CreativeCookingBooks"
-                style="width:100%;height:100%;border:0;"
+            <div class="seriesCard">
+              <img
+                src="assets/creative-cooking-series.png"
+                alt="Creative Cooking Complete Series covers"
                 loading="lazy"
-                referrerpolicy="no-referrer"
-              ></iframe>
+              />
             </div>
 
-            <div class="etsyFallback" id="etsyFallback">
-              Etsy blocked embedding in this browser. You can still open the shop here:
-              <br />
-              <a class="etsyLink" href="https://www.etsy.com/shop/CreativeCookingBooks" target="_blank" rel="noopener">
-                Open CreativeCookingBooks on Etsy →
+            <div class="ctaActions">
+              <a class="ctaButton" href="https://www.etsy.com/shop/CreativeCookingBooks" target="_blank" rel="noopener">
+                Explore the guides →
               </a>
             </div>
 
-            <div class="footer" style="margin-top:14px;">© <span id="year3"></span> Cooking Compass</div>
+            <p class="ctaFineprint">© <span id="year3"></span> Cooking Compass</p>
           </div>
         </div>
       </div>
@@ -396,83 +429,3 @@
       li.textContent = text;
       el.appendChild(li);
     });
-  }
-
-  function safeText(x, max=1200){
-    return String(x || "").replace(/\s+/g, " ").trim().slice(0, max);
-  }
-
-  async function callAI(ingredients){
-    const res = await fetch("/api/compass", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ingredients })
-    });
-    if(!res.ok){
-      const txt = await res.text().catch(()=> "");
-      throw new Error(txt || "Request failed");
-    }
-    return await res.json();
-  }
-
-  function applyRecipe(data){
-    $("rTitle").textContent = safeText(data.title, 140) || "Meal direction";
-    $("rIntro").textContent = safeText(data.intro, 420) || "";
-    renderList($("rSteps"), Array.isArray(data.steps) ? data.steps.slice(0, 8) : []);
-    renderList($("rOptional"), Array.isArray(data.optional) ? data.optional.slice(0, 6) : []);
-    $("rNote").textContent = safeText(data.note, 360) || "";
-  }
-
-  function checkEtsyEmbedFallback(){
-    setTimeout(() => {
-      const frame = $("etsyFrame");
-      try{
-        const w = frame.contentWindow;
-        if(!w) throw new Error("no window");
-      } catch {
-        $("etsyFrameWrap").style.display = "none";
-        $("etsyFallback").classList.add("show");
-      }
-    }, 1200);
-  }
-
-  async function runOnce(){
-    clearError();
-    const ingredients = $("ingredients").value.trim();
-    if(!ingredients){
-      setError("Please type a few ingredients.");
-      return;
-    }
-
-    showView("viewLoading");
-
-    try{
-      const data = await callAI(ingredients);
-      applyRecipe(data);
-      showView("viewRecipe");
-      checkEtsyEmbedFallback();
-      window.scrollTo({ top: 0, behavior: "instant" });
-    } catch(e){
-      showView("viewLanding");
-      setError("Something went wrong. Try again, or shorten the ingredient list.");
-      console.error(e);
-    }
-  }
-
-  $("btnGo").addEventListener("click", runOnce);
-  $("btnBack").addEventListener("click", () => showView("viewLanding"));
-  $("btnNext").addEventListener("click", runOnce);
-  $("btnLearn").addEventListener("click", () => {
-    window.open("https://www.etsy.com/shop/CreativeCookingBooks", "_blank", "noopener");
-  });
-
-  document.addEventListener("keydown", (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") runOnce();
-    if (e.key === "Escape" && $("viewLoading").classList.contains("active")) showView("viewLanding");
-  });
-
-  const y = new Date().getFullYear();
-  ["year","year2","year3"].forEach(id => { if($(id)) $(id).textContent = y; });
-</script>
-</body>
-</html>
