@@ -1,7 +1,0 @@
-[functions]
-  node_bundler = "esbuild"
-
-[[redirects]]
-  from = "/api/compass"
-  to = "/.netlify/functions/compass"
-  status = 200
