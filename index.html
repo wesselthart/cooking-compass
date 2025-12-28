@@ -139,7 +139,6 @@
     .view{ display:none; }
     .view.active{ display:block; }
 
-    /* Loading */
     .loaderWrap{
       display:flex;
       flex-direction:column;
@@ -162,7 +161,6 @@
       line-height:1.5;
     }
 
-    /* Recipe */
     .recipeTitle{
       margin: 2px 0 0;
       font-size: 26px;
@@ -194,15 +192,8 @@
       text-transform: uppercase;
     }
 
-    ul{
-      margin: 0 0 0 18px;
-      padding:0;
-    }
-    li{
-      margin: 8px 0;
-      line-height: 1.6;
-      font-size: 14.5px;
-    }
+    ul{ margin: 0 0 0 18px; padding:0; }
+    li{ margin: 8px 0; line-height: 1.6; font-size: 14.5px; }
 
     .note{
       margin-top: 12px;
@@ -226,7 +217,6 @@
     }
     .error.show{ display:block; }
 
-    /* CTA (replaces Etsy embed) */
     .ctaWrap{
       margin-top: 18px;
       width: min(720px, 100%);
@@ -311,7 +301,6 @@
   <main class="stage">
     <section class="panel">
 
-      <!-- VIEW 1: LANDING -->
       <div class="view active" id="viewLanding">
         <div class="center">
           <h1>Cooking Compass</h1>
@@ -331,7 +320,6 @@
         </div>
       </div>
 
-      <!-- VIEW 2: LOADING -->
       <div class="view" id="viewLoading">
         <div class="center">
           <div class="loaderWrap" aria-live="polite">
@@ -353,7 +341,6 @@
         </div>
       </div>
 
-      <!-- VIEW 3: RECIPE -->
       <div class="view" id="viewRecipe">
         <div class="center">
           <h2 class="recipeTitle" id="rTitle">…</h2>
@@ -374,7 +361,6 @@
             <button id="btnLearn">Learn to think like this</button>
           </div>
 
-          <!-- CTA SECTION (image + single link) -->
           <div class="ctaWrap">
             <p class="ctaTitle">Creative Cooking — Complete Series</p>
             <p class="ctaText">
@@ -429,3 +415,70 @@
       li.textContent = text;
       el.appendChild(li);
     });
+  }
+
+  function safeText(x, max=1200){
+    return String(x || "").replace(/\s+/g, " ").trim().slice(0, max);
+  }
+
+  async function callAI(ingredients){
+    const res = await fetch("/api/compass", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ingredients })
+    });
+    if(!res.ok){
+      const txt = await res.text().catch(()=> "");
+      throw new Error(txt || "Request failed");
+    }
+    return await res.json();
+  }
+
+  function applyRecipe(data){
+    $("rTitle").textContent = safeText(data.title, 140) || "Meal direction";
+    $("rIntro").textContent = safeText(data.intro, 420) || "";
+    renderList($("rSteps"), Array.isArray(data.steps) ? data.steps.slice(0, 8) : []);
+    renderList($("rOptional"), Array.isArray(data.optional) ? data.optional.slice(0, 6) : []);
+    $("rNote").textContent = safeText(data.note, 360) || "";
+  }
+
+  async function runOnce(){
+    clearError();
+    const ingredients = $("ingredients").value.trim();
+    if(!ingredients){
+      setError("Please type a few ingredients.");
+      return;
+    }
+
+    showView("viewLoading");
+
+    try{
+      const data = await callAI(ingredients);
+      applyRecipe(data);
+      showView("viewRecipe");
+      window.scrollTo({ top: 0, behavior: "auto" }); // ✅ fixed
+    } catch(e){
+      showView("viewLanding");
+      setError("Something went wrong. Try again, or shorten the ingredient list.");
+      console.error(e);
+    }
+  }
+
+  $("btnGo").addEventListener("click", runOnce);
+  $("btnBack").addEventListener("click", () => showView("viewLanding"));
+  $("btnNext").addEventListener("click", runOnce);
+
+  $("btnLearn").addEventListener("click", () => {
+    window.open("https://www.etsy.com/shop/CreativeCookingBooks", "_blank", "noopener");
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") runOnce();
+    if (e.key === "Escape" && $("viewLoading").classList.contains("active")) showView("viewLanding");
+  });
+
+  const y = new Date().getFullYear();
+  ["year","year2","year3"].forEach(id => { if($(id)) $(id).textContent = y; });
+</script>
+</body>
+</html>
